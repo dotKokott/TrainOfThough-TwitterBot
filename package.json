@@ -1,0 +1,27 @@
+{
+  "name": "trainofthought",
+  "version": "1.0.0",
+  "description": "Twitter bot that gets lost in an endless train of thought",
+  "main": "bot.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dotKokott/TrainOfThought-TwitterBot.git"
+  },
+  "keywords": [
+    "twitter",
+    "bot"
+  ],
+  "author": "Christian Kokott",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dotKokott/TrainOfThought-TwitterBot/issues"
+  },
+  "homepage": "https://github.com/dotKokott/TrainOfThought-TwitterBot#readme",
+  "dependencies": {
+    "fotology": "^1.2.2",
+    "twit": "^2.1.1"
+  }
+}
