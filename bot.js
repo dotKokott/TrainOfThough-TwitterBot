@@ -33,17 +33,23 @@ if (!String.prototype.format) {
   };
 }
 
-var getRelatedWords = function(word, callback) {
+var getRelatedWords = function(word, callback, noWordsCallback) {
   var uri = 'http://api.wordnik.com:80/v4/word.json/' + word + '/relatedWords?useCanonical=true&relationshipTypes=same-context&limitPerRelationshipType=10&api_key=a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5';
-
+  console.log("Word: " + word);
   request(uri, function (error, response, body) {
     if (!error && response.statusCode == 200) {
 
-      var words = JSON.parse(body) [0].words;
-      callback(words);
+      var json = JSON.parse(body) [0];
+      if(json !== undefined) {
+          callback(json.words);
+      } else {
+        noWordsCallback();
+      }
     }
   })
 }
+
+
 
 var imageDir = './images';
 if(!fs.existsSync(imageDir)) {
@@ -62,8 +68,7 @@ var searchOptions = {
 var statuses = [
   "{0}? That reminds me of {1}",
   "Talking about {0}, did you hear about {1}?",
-  "{0}? Lets think about {1}",
-  "{0} -> {1}"
+  "{0}? Lets think about {1}"
 ]
 
 var currentThought = 'table';
@@ -82,7 +87,7 @@ function thinkOf(thought) {
 
   fotology(thought, searchOptions, function(urls) {
       var options = {
-        url:  urls[randomInt(0, urls.length)],
+        url:  urls[randomInt(0, urls.length - 1)],
         timeout: 120000
       };
 
@@ -112,16 +117,42 @@ function tweeted(err, data, response) {
 }
 
 function foundWords(words) {
-  var choice = randomInt(0, words.length);
+  var choice = randomInt(0, words.length - 1);
   thinkOf(words[choice]);
 }
 
-getRelatedWords(currentThought, foundWords);
+getRelatedWords(currentThought, foundWords, noWords);
 
-function think() {
-  getRelatedWords(currentThought, foundWords);
+
+function setRandomThought() {
+  var uri = 'http://api.wordnik.com:80/v4/words.json/randomWord?hasDictionaryDef=true&minCorpusCount=0&maxCorpusCount=-1&minDictionaryCount=1&maxDictionaryCount=-1&minLength=5&maxLength=-1&api_key=a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5';
+
+  request(uri, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+
+      var oldThought = currentThought;
+
+
+      var json = JSON.parse(body);
+      currentThought = json.word;
+
+      T.post('statuses/update', {status: "I dont know what to think about " + oldThought + ". What about " + currentThought}, tweeted);
+
+      getRelatedWords(currentThought, foundWords, noWords);
+    }
+  })
+
 }
 
-setInterval(think, 1000 * 60 * 10);
+function noWords() {
+  console.log("Getting random word");
+  setRandomThought();
+}
+
+function think() {
+  getRelatedWords(currentThought, foundWords, noWords);
+}
+
+setInterval(think, 1000 * 60 * 5);
 
 //thinkOf("phone 2");
