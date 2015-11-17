@@ -34,7 +34,7 @@ if (!String.prototype.format) {
 }
 
 var getRelatedWords = function(word, callback, noWordsCallback) {
-  var uri = 'http://api.wordnik.com:80/v4/word.json/' + word + '/relatedWords?useCanonical=true&relationshipTypes=same-context&limitPerRelationshipType=10&api_key=a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5';
+  var uri = 'http://api.wordnik.com:80/v4/word.json/' + word + '/relatedWords?useCanonical=true&relationshipTypes=same-context&limitPerRelationshipType=10&api_key=' + config.wordnikConfig.apikey;
   console.log("Word: " + word);
   request(uri, function (error, response, body) {
     if (!error && response.statusCode == 200) {
@@ -59,7 +59,7 @@ if(!fs.existsSync(imageDir)) {
 var twit = require('twit');
 var config = require('./config');
 
-var T = new twit(config);
+var T = new twit(config.twitConfig);
 
 var searchOptions = {
   safe: false
@@ -125,7 +125,7 @@ getRelatedWords(currentThought, foundWords, noWords);
 
 
 function setRandomThought() {
-  var uri = 'http://api.wordnik.com:80/v4/words.json/randomWord?hasDictionaryDef=true&minCorpusCount=0&maxCorpusCount=-1&minDictionaryCount=1&maxDictionaryCount=-1&minLength=5&maxLength=-1&api_key=a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5';
+  var uri = 'http://api.wordnik.com:80/v4/words.json/randomWord?hasDictionaryDef=true&minCorpusCount=0&maxCorpusCount=-1&minDictionaryCount=1&maxDictionaryCount=-1&minLength=5&maxLength=-1&api_key=' + config.wordnikConfig.apikey;
 
   request(uri, function (error, response, body) {
     if (!error && response.statusCode == 200) {

@@ -4,7 +4,7 @@
   "description": "Twitter bot that gets lost in an endless train of thought",
   "main": "bot.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node bot.js"    
   },
   "repository": {
     "type": "git",
@@ -22,6 +22,7 @@
   "homepage": "https://github.com/dotKokott/TrainOfThought-TwitterBot#readme",
   "dependencies": {
     "fotology": "^1.2.2",
+    "request": "^2.65.0",
     "twit": "^2.1.1"
   }
 }
